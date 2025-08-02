@@ -58,6 +58,9 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
     
+    # 마이그레이션 설정
+    AUTO_MIGRATE: bool = False  # Railway에서는 False로 설정
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

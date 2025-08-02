@@ -16,8 +16,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 애플리케이션 코드 복사
 COPY . .
 
+# 시작 스크립트 실행 권한 부여
+RUN chmod +x start.sh
+
 # 포트 노출
 EXPOSE 8000
 
-# 애플리케이션 실행
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] 
+# 시작 스크립트 실행
+CMD ["./start.sh"] 
