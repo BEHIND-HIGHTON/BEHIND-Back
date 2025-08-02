@@ -22,4 +22,4 @@ class CRUDPartner(CRUDBase[Partner, PartnerCreate, PartnerUpdate]):
         return db_obj
 
 
-partner = CRUDPartner(Partner) 
+partner_crud = CRUDPartner(Partner) 

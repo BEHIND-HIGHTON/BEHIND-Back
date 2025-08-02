@@ -25,14 +25,14 @@ class CRUDMessage:
     def update_chat_history(self, db: Session, *, user_id: int, partner_name: str, messages: List[Dict[str, Any]]) -> int:
         """채팅 기록을 업데이트합니다."""
         # 파트너가 존재하는지 확인
-        from app.crud.partner import partner
-        partner_obj = partner.get_by_user_id_and_name(db, user_id=user_id, name=partner_name)
+        from app.crud.partner import partner_crud
+        partner_obj = partner_crud.get_by_user_id_and_name(db, user_id=user_id, name=partner_name)
         
         if not partner_obj:
             # 파트너가 없으면 생성
             from app.schemas.partner import PartnerCreate
             partner_data = PartnerCreate(name=partner_name)
-            partner_obj = partner.create(db, obj_in=partner_data, user_id=user_id)
+            partner_obj = partner_crud.create(db, obj_in=partner_data, user_id=user_id)
         
         # 기존 채팅 기록 삭제 (덮어쓰기)
         db.query(ChatHistory).filter(ChatHistory.user_id == user_id).delete()
@@ -50,4 +50,4 @@ class CRUDMessage:
         return len(messages)
 
 
-message = CRUDMessage() 
+message_crud = CRUDMessage() 
