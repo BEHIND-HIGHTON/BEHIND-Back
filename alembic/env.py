@@ -20,9 +20,15 @@ from app.db.base import Base
 from app.models import user, item, partner, message  # Import all models here
 target_metadata = Base.metadata
 
-# 직접 테이블 생성 사용 (마이그레이션 비활성화)
-# from app.db.session import get_database_url
-# config.set_main_option("sqlalchemy.url", get_database_url())
+# PyMySQL을 사용하도록 설정
+from app.db.session import get_database_url
+database_url = get_database_url()
+# PyMySQL 드라이버 명시
+if database_url.startswith("mysql+pymysql://"):
+    config.set_main_option("sqlalchemy.url", database_url)
+else:
+    # PyMySQL 드라이버 추가
+    config.set_main_option("sqlalchemy.url", database_url.replace("mysql://", "mysql+pymysql://"))
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
