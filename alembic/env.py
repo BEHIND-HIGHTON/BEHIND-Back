@@ -21,8 +21,8 @@ from app.models import user, item, partner, message  # Import all models here
 target_metadata = Base.metadata
 
 # Railway 환경에서 데이터베이스 URL 설정
-from app.core.config import settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+from app.db.session import get_database_url
+config.set_main_option("sqlalchemy.url", get_database_url())
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

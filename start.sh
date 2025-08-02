@@ -6,9 +6,9 @@ for i in {1..30}; do
     python -c "
 import sys
 from sqlalchemy import create_engine, text
-from app.core.config import settings
+from app.db.session import get_database_url
 try:
-    engine = create_engine(settings.DATABASE_URL)
+    engine = create_engine(get_database_url())
     with engine.connect() as conn:
         conn.execute(text('SELECT 1'))
     print('Database connection successful!')

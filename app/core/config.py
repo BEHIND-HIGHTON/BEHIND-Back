@@ -32,19 +32,8 @@ class Settings(BaseSettings):
     MYSQLPORT: str = ""
     MYSQLUSER: str = ""
     
-    # 데이터베이스 URL 생성
-    @property
-    def DATABASE_URL(self) -> str:
-        # Railway에서 MYSQL_URL이 제공되면 사용
-        if self.MYSQL_URL:
-            return self.MYSQL_URL.replace("mysql://", "mysql+pymysql://")
-        
-        # 개별 환경 변수로 구성
-        if all([self.MYSQLHOST, self.MYSQLUSER, self.MYSQLPASSWORD, self.MYSQLDATABASE, self.MYSQLPORT]):
-            return f"mysql+pymysql://{self.MYSQLUSER}:{self.MYSQLPASSWORD}@{self.MYSQLHOST}:{self.MYSQLPORT}/{self.MYSQLDATABASE}"
-        
-        # 개발 환경용 SQLite (로컬 테스트용)
-        return "sqlite:///./behind.db"
+    # 데이터베이스 URL
+    DATABASE_URL: str = ""
     
     # Redis 설정
     REDIS_URL: str = "redis://localhost:6379"
