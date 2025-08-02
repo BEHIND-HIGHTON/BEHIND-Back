@@ -1,14 +1,19 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.crud.user import user_crud
 from app.schemas.user import User
+from app.db.session import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
+async def get_current_user(
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+) -> User:
     """현재 인증된 사용자 가져오기"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -26,12 +31,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     except JWTError:
         raise credentials_exception
     
-    from app.db.session import SessionLocal
-    db = SessionLocal()
-    try:
-        user = user_crud.get_by_email(db, email=email)
-    finally:
-        db.close()
+    user = user_crud.get_by_email(db, email=email)
     if user is None:
         raise credentials_exception
     return user 

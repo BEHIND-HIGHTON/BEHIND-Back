@@ -1,34 +1,43 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
+from sqlalchemy.orm import Session
 from app.schemas.item import Item, ItemCreate, ItemUpdate
 from app.crud.item import item_crud
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, get_db
 from app.schemas.user import User
 
 router = APIRouter()
 
 
 @router.get("/", response_model=List[Item])
-async def read_items(skip: int = 0, limit: int = 100):
+def read_items(
+    skip: int = 0, 
+    limit: int = 100,
+    db: Session = Depends(get_db)
+):
     """아이템 목록 조회"""
-    items = await item_crud.get_multi(skip=skip, limit=limit)
+    items = item_crud.get_multi(db, skip=skip, limit=limit)
     return items
 
 
 @router.post("/", response_model=Item)
-async def create_item(
+def create_item(
     item_in: ItemCreate,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """새 아이템 생성"""
-    item = await item_crud.create(item_in.dict(), owner_id=current_user.id)
+    item = item_crud.create(db, obj_in=item_in, owner_id=current_user.id)
     return item
 
 
 @router.get("/{item_id}", response_model=Item)
-async def read_item(item_id: int):
+def read_item(
+    item_id: int,
+    db: Session = Depends(get_db)
+):
     """특정 아이템 조회"""
-    item = await item_crud.get(item_id)
+    item = item_crud.get(db, id=item_id)
     if not item:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -38,13 +47,14 @@ async def read_item(item_id: int):
 
 
 @router.put("/{item_id}", response_model=Item)
-async def update_item(
+def update_item(
     item_id: int,
     item_in: ItemUpdate,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """아이템 업데이트"""
-    item = await item_crud.get(item_id)
+    item = item_crud.get(db, id=item_id)
     if not item:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -55,17 +65,18 @@ async def update_item(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="권한이 없습니다."
         )
-    item = await item_crud.update(item_id, item_in.dict(exclude_unset=True))
+    item = item_crud.update(db, db_obj=item, obj_in=item_in)
     return item
 
 
 @router.delete("/{item_id}")
-async def delete_item(
+def delete_item(
     item_id: int,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """아이템 삭제"""
-    item = await item_crud.get(item_id)
+    item = item_crud.get(db, id=item_id)
     if not item:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -76,5 +87,5 @@ async def delete_item(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="권한이 없습니다."
         )
-    await item_crud.delete(item_id)
+    item_crud.remove(db, id=item_id)
     return {"message": "아이템이 삭제되었습니다."} 

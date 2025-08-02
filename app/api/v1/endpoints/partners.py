@@ -16,7 +16,7 @@ def read_partners(
     """
     현재 사용자의 상대 목록을 조회합니다.
     """
-    partners = crud.partner.get_by_user_id(db, user_id=current_user.id)
+    partners = crud.partner_crud.get_by_user_id(db, user_id=current_user.id)
     return {
         "partners": partners,
         "total": len(partners)
@@ -33,7 +33,7 @@ def create_partner(
     """
     새로운 상대를 생성합니다.
     """
-    partner = crud.partner.create(db, obj_in=partner_in, user_id=current_user.id)
+    partner = crud.partner_crud.create(db, obj_in=partner_in, user_id=current_user.id)
     return partner
 
 
@@ -47,7 +47,7 @@ def read_partner(
     """
     특정 상대 정보를 조회합니다.
     """
-    partner = crud.partner.get(db, id=partner_id)
+    partner = crud.partner_crud.get(db, id=partner_id)
     if not partner or partner.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Partner not found")
     return partner
@@ -64,10 +64,10 @@ def update_partner(
     """
     상대 정보를 업데이트합니다.
     """
-    partner = crud.partner.get(db, id=partner_id)
+    partner = crud.partner_crud.get(db, id=partner_id)
     if not partner or partner.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Partner not found")
-    partner = crud.partner.update(db, db_obj=partner, obj_in=partner_in)
+    partner = crud.partner_crud.update(db, db_obj=partner, obj_in=partner_in)
     return partner
 
 
@@ -81,8 +81,8 @@ def delete_partner(
     """
     상대를 삭제합니다.
     """
-    partner = crud.partner.get(db, id=partner_id)
+    partner = crud.partner_crud.get(db, id=partner_id)
     if not partner or partner.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Partner not found")
-    crud.partner.remove(db, id=partner_id)
+    crud.partner_crud.remove(db, id=partner_id)
     return {"message": "Partner deleted successfully"} 

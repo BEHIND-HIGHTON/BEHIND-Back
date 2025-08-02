@@ -13,13 +13,13 @@ router = APIRouter()
 
 
 @router.get("/test")
-async def test_endpoint():
+def test_endpoint():
     """테스트 엔드포인트"""
     return {"message": "Auth endpoint is working"}
 
 
 @router.post("/register", response_model=User)
-async def register(user_in: UserRegister, db: Session = Depends(get_db)):
+def register(user_in: UserRegister, db: Session = Depends(get_db)):
     """사용자 등록"""
     # 이미 존재하는 사용자인지 확인
     existing_user = user_crud.get_by_email(db, email=user_in.email)
@@ -43,7 +43,7 @@ async def register(user_in: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-async def login(user_in: UserLogin, db: Session = Depends(get_db)):
+def login(user_in: UserLogin, db: Session = Depends(get_db)):
     """사용자 로그인"""
     user = user_crud.get_by_email(db, email=user_in.email)
     if not user or not verify_password(user_in.password, user.hashed_password):
@@ -69,7 +69,7 @@ async def login(user_in: UserLogin, db: Session = Depends(get_db)):
 
 
 @router.post("/logout")
-async def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """사용자 로그아웃"""
     # JWT 토큰은 클라이언트에서 삭제하므로 서버에서는 성공 응답만 반환
     return {"message": "로그아웃되었습니다."} 

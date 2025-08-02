@@ -21,7 +21,7 @@ def read_chat_history(
     if current_user.id != user_id:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
-    chat_history = crud.message.get_chat_history_by_user_id(db, user_id=user_id)
+    chat_history = crud.message_crud.get_chat_history_by_user_id(db, user_id=user_id)
     
     # 채팅 기록이 없으면 빈 리스트 반환
     if not chat_history:
@@ -57,7 +57,7 @@ def update_chat_history(
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
     try:
-        updated_count = crud.message.update_chat_history(
+        updated_count = crud.message_crud.update_chat_history(
             db, 
             user_id=chat_update.user_id,
             partner_name=chat_update.partner_name,
