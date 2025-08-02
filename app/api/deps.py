@@ -26,7 +26,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     except JWTError:
         raise credentials_exception
     
-    user = await user_crud.get_by_email(email=email)
+    from app.db.session import SessionLocal
+    db = SessionLocal()
+    try:
+        user = user_crud.get_by_email(db, email=email)
+    finally:
+        db.close()
     if user is None:
         raise credentials_exception
     return user 

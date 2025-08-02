@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 
@@ -10,6 +11,7 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean(), default=True)
     is_superuser = Column(Boolean(), default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # 관계 설정
     items = relationship("Item", back_populates="owner") 

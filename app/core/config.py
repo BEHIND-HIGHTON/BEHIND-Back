@@ -21,8 +21,8 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    # 데이터베이스 설정 (MySQL)
-    DATABASE_URL: str = "mysql://user:password@localhost/behind_db"
+    # 데이터베이스 설정 (SQLite for development)
+    DATABASE_URL: str = "sqlite:///./behind.db"
     
     # Redis 설정
     REDIS_URL: str = "redis://localhost:6379"
