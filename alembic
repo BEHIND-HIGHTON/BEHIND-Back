@@ -1,0 +1,4 @@
+#!/bin/bash
+# Dummy alembic script to prevent errors
+echo "Alembic is not used in this project. Tables are created manually."
+exit 0 

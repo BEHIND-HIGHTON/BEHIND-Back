@@ -24,4 +24,6 @@ venv/
 ENV/
 env/
 *.db
-*.sqlite3 
+*.sqlite3
+alembic/
+alembic.ini 
