@@ -37,13 +37,17 @@ class Settings(BaseSettings):
     def DATABASE_URL(self) -> str:
         # Railway에서 MYSQL_URL이 제공되면 사용
         if self.MYSQL_URL:
+            print(f"Using MYSQL_URL: {self.MYSQL_URL}")
             return self.MYSQL_URL.replace("mysql://", "mysql+pymysql://")
         
         # 개별 환경 변수로 구성
         if all([self.MYSQLHOST, self.MYSQLUSER, self.MYSQLPASSWORD, self.MYSQLDATABASE, self.MYSQLPORT]):
-            return f"mysql+pymysql://{self.MYSQLUSER}:{self.MYSQLPASSWORD}@{self.MYSQLHOST}:{self.MYSQLPORT}/{self.MYSQLDATABASE}"
+            url = f"mysql+pymysql://{self.MYSQLUSER}:{self.MYSQLPASSWORD}@{self.MYSQLHOST}:{self.MYSQLPORT}/{self.MYSQLDATABASE}"
+            print(f"Using individual MySQL variables: {url}")
+            return url
         
         # 개발 환경용 SQLite
+        print("Using SQLite fallback")
         return "sqlite:///./behind.db"
     
     # Redis 설정
