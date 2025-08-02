@@ -47,6 +47,15 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
     
+    # 배포 환경 설정
+    @field_validator("DEBUG", mode="before")
+    @classmethod
+    def set_debug(cls, v: bool) -> bool:
+        # ENVIRONMENT가 production이면 DEBUG를 False로 설정
+        if cls.ENVIRONMENT == "production":
+            return False
+        return v
+    
     # 직접 테이블 생성 사용 (마이그레이션 대신)
     
     class Config:

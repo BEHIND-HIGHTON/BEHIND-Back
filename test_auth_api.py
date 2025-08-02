@@ -7,7 +7,7 @@ import requests
 import json
 import time
 
-BASE_URL = "http://127.0.0.1:8004/api/v1"
+BASE_URL = "http://127.0.0.1:8000/api/v1"
 
 def test_register():
     """회원가입 테스트"""
