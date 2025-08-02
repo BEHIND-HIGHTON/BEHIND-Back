@@ -1,17 +1,17 @@
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     is_active: Optional[bool] = True
     is_superuser: bool = False
     full_name: Optional[str] = None
 
 
 class UserCreate(UserBase):
-    email: EmailStr
+    email: str
     password: str
     hashed_password: Optional[str] = None
 
