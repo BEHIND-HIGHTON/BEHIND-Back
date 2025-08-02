@@ -14,10 +14,10 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
-# CORS 미들웨어 설정
+# CORS 미들웨어 설정 - 모든 도메인 허용
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_origins=["*"],  # 모든 도메인에서 접근 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
