@@ -20,9 +20,9 @@ from app.db.base import Base
 from app.models import user, item, partner, message  # Import all models here
 target_metadata = Base.metadata
 
-# Railway 환경에서 데이터베이스 URL 설정
-from app.db.session import get_database_url
-config.set_main_option("sqlalchemy.url", get_database_url())
+# 직접 테이블 생성 사용 (마이그레이션 비활성화)
+# from app.db.session import get_database_url
+# config.set_main_option("sqlalchemy.url", get_database_url())
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

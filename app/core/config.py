@@ -47,8 +47,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
     
-    # 마이그레이션 설정
-    AUTO_MIGRATE: bool = False  # Railway에서는 환경 변수로 제어
+    # 직접 테이블 생성 사용 (마이그레이션 대신)
     
     class Config:
         env_file = ".env"

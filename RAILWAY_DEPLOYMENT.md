@@ -50,9 +50,9 @@ Railway가 자동으로 설정하는 변수들:
 - 프로젝트에 `Dockerfile`이 있으면 자동으로 사용됨
 - `start.sh` 스크립트가 자동으로 마이그레이션 실행
 
-### 3.2 환경 변수로 마이그레이션 제어
-- `AUTO_MIGRATE=true`: 배포 시 자동 마이그레이션
-- `AUTO_MIGRATE=false`: 수동 마이그레이션 (기본값)
+### 3.2 직접 테이블 생성
+- 배포 시 자동으로 모든 테이블이 생성됨
+- 마이그레이션 없이 SQLAlchemy 모델 기반으로 테이블 생성
 
 ## 4. 배포 후 확인
 
@@ -60,10 +60,17 @@ Railway가 자동으로 설정하는 변수들:
 - Railway 대시보드에서 배포 로그 확인
 - **"Deployments"** 탭에서 배포 상태 확인
 
-### 4.2 수동 마이그레이션 (필요시)
+### 4.2 테이블 생성 확인
 ```bash
-# Railway 터미널에서
-alembic upgrade head
+# Railway 터미널에서 (필요시)
+python -c "
+from app.db.session import get_database_url
+from app.db.base import Base
+from sqlalchemy import create_engine
+engine = create_engine(get_database_url())
+Base.metadata.create_all(bind=engine)
+print('Tables created successfully!')
+"
 ```
 
 ### 4.3 API 테스트

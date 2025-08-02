@@ -23,13 +23,35 @@ except Exception as e:
     sleep 1
 done
 
-# 환경 변수로 마이그레이션 제어
-if [ "$AUTO_MIGRATE" = "true" ]; then
-    echo "Running database migrations..."
-    alembic upgrade head
-else
-    echo "Skipping automatic migrations (AUTO_MIGRATE=false)"
-fi
+# 직접 테이블 생성
+echo "Creating database tables directly..."
+python -c "
+import sys
+from sqlalchemy import create_engine, text
+from app.db.session import get_database_url
+from app.db.base import Base
+
+try:
+    engine = create_engine(get_database_url())
+    
+    # 테이블 생성
+    Base.metadata.create_all(bind=engine)
+    print('Database tables created successfully!')
+    
+    # 테이블 확인
+    with engine.connect() as conn:
+        result = conn.execute(text(\"\"\"
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = DATABASE()
+        \"\"\"))
+        tables = [row[0] for row in result]
+        print(f'Created tables: {tables}')
+    
+except Exception as e:
+    print(f'Error creating tables: {e}')
+    sys.exit(1)
+"
 
 # 애플리케이션 시작
 echo "Starting application..."
