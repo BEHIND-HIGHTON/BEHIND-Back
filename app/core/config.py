@@ -37,17 +37,13 @@ class Settings(BaseSettings):
     def DATABASE_URL(self) -> str:
         # Railway에서 MYSQL_URL이 제공되면 사용
         if self.MYSQL_URL:
-            print(f"Using MYSQL_URL: {self.MYSQL_URL}")
             return self.MYSQL_URL.replace("mysql://", "mysql+pymysql://")
         
         # 개별 환경 변수로 구성
         if all([self.MYSQLHOST, self.MYSQLUSER, self.MYSQLPASSWORD, self.MYSQLDATABASE, self.MYSQLPORT]):
-            url = f"mysql+pymysql://{self.MYSQLUSER}:{self.MYSQLPASSWORD}@{self.MYSQLHOST}:{self.MYSQLPORT}/{self.MYSQLDATABASE}"
-            print(f"Using individual MySQL variables: {url}")
-            return url
+            return f"mysql+pymysql://{self.MYSQLUSER}:{self.MYSQLPASSWORD}@{self.MYSQLHOST}:{self.MYSQLPORT}/{self.MYSQLDATABASE}"
         
-        # 개발 환경용 SQLite
-        print("Using SQLite fallback")
+        # 개발 환경용 SQLite (로컬 테스트용)
         return "sqlite:///./behind.db"
     
     # Redis 설정
@@ -63,7 +59,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     
     # 마이그레이션 설정
-    AUTO_MIGRATE: bool = False  # Railway에서는 False로 설정
+    AUTO_MIGRATE: bool = False  # Railway에서는 환경 변수로 제어
     
     class Config:
         env_file = ".env"

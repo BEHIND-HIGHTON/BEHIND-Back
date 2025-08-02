@@ -4,7 +4,7 @@ from app.core.config import settings
 
 # 데이터베이스 엔진 설정
 if settings.DATABASE_URL.startswith("sqlite"):
-    # SQLite용 설정
+    # SQLite용 설정 (로컬 개발)
     engine = create_engine(
         settings.DATABASE_URL, 
         connect_args={"check_same_thread": False},
