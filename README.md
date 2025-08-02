@@ -44,17 +44,11 @@ cp env.example .env
 
 PostgreSQL 데이터베이스를 생성하고 연결 정보를 `.env` 파일에 설정하세요.
 
-### 5. 데이터베이스 마이그레이션
+### 5. 데이터베이스 테이블 생성
 
 ```bash
-# Alembic 초기화 (최초 1회만)
-alembic init alembic
-
-# 마이그레이션 생성
-alembic revision --autogenerate -m "Initial migration"
-
-# 마이그레이션 실행
-alembic upgrade head
+# Railway MySQL 터미널에서 직접 테이블 생성
+# create_tables.sql 파일의 내용을 실행
 ```
 
 ### 6. 서버 실행
@@ -194,10 +188,11 @@ BEHIND-Back/
 │       ├── auth.py
 │       ├── user.py
 │       └── item.py
-├── alembic/
 ├── main.py
 ├── requirements.txt
-├── alembic.ini
+├── Dockerfile
+├── start.sh
+├── create_tables.sql
 └── README.md
 ```
 
