@@ -2,4 +2,6 @@
 # imported by Alembic
 from app.db.base_class import Base
 from app.models.user import User
-from app.models.item import Item 
+from app.models.item import Item
+from app.models.partner import Partner
+from app.models.message import ReceivedMessage, SentMessage 

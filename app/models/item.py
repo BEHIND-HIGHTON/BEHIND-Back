@@ -5,8 +5,8 @@ from app.db.base_class import Base
 
 class Item(Base):
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
+    title = Column(String(255), index=True)
+    description = Column(String(500))
     owner_id = Column(Integer, ForeignKey("user.id"))
     
     # 관계 설정
