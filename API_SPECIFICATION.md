@@ -74,7 +74,15 @@ POST /auth/logout
 
 ### 2.1 상대 목록 조회
 ```http
-GET /partners
+GET /partners/{user_id}
+```
+
+**Path Variables:**
+- `user_id` (integer): 사용자 ID
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
 ```
 
 **Response:**
@@ -84,9 +92,141 @@ GET /partners
     {
       "id": 1,
       "name": "김철수",
+      "mbti": "ENFP",
+      "gender": "남성",
+      "age": 25,
+      "relation": "친구",
+      "intimacy": 0.8,
+      "affection": 0.7,
+      "aggression": 0.2,
+      "dominance": 0.5,
+      "closeness": 8,
+      "user_id": 1,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
     }
   ],
   "total": 1
+}
+```
+
+### 2.2 상대 생성
+```http
+POST /partners/{user_id}
+```
+
+**Path Variables:**
+- `user_id` (integer): 사용자 ID
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Request Body:**
+```json
+{
+  "name": "김철수",
+  "mbti": "ENFP",
+  "gender": "남성",
+  "age": 25,
+  "relation": "친구",
+  "intimacy": 0.8,
+  "affection": 0.7,
+  "aggression": 0.2,
+  "dominance": 0.5,
+  "closeness": 8
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "김철수",
+  "mbti": "ENFP",
+  "gender": "남성",
+  "age": 25,
+  "relation": "친구",
+  "intimacy": 0.8,
+  "affection": 0.7,
+  "aggression": 0.2,
+  "dominance": 0.5,
+  "closeness": 8,
+  "user_id": 1,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}
+```
+
+### 2.3 상대 수정
+```http
+PUT /partners/{user_id}/{partner_id}
+```
+
+**Path Variables:**
+- `user_id` (integer): 사용자 ID
+- `partner_id` (integer): 상대 ID
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Request Body:**
+```json
+{
+  "name": "김철수",
+  "mbti": "ENFP",
+  "gender": "남성",
+  "age": 25,
+  "relation": "친구",
+  "intimacy": 0.8,
+  "affection": 0.7,
+  "aggression": 0.2,
+  "dominance": 0.5,
+  "closeness": 8
+}
+```
+
+**Response:**
+```json
+{
+  "id": 1,
+  "name": "김철수",
+  "mbti": "ENFP",
+  "gender": "남성",
+  "age": 25,
+  "relation": "친구",
+  "intimacy": 0.8,
+  "affection": 0.7,
+  "aggression": 0.2,
+  "dominance": 0.5,
+  "closeness": 8,
+  "user_id": 1,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}
+```
+
+### 2.4 상대 삭제
+```http
+DELETE /partners/{user_id}/{partner_id}
+```
+
+**Path Variables:**
+- `user_id` (integer): 사용자 ID
+- `partner_id` (integer): 상대 ID
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Response:**
+```json
+{
+  "message": "Partner deleted successfully"
 }
 ```
 
