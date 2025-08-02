@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     MYSQLPORT: str = ""
     MYSQLUSER: str = ""
     
-    # 데이터베이스 URL
+    # 데이터베이스 URL (MySQL 전용)
     DATABASE_URL: str = ""
     
     # Redis 설정

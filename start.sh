@@ -11,10 +11,10 @@ try:
     engine = create_engine(get_database_url())
     with engine.connect() as conn:
         conn.execute(text('SELECT 1'))
-    print('Database connection successful!')
+    print('MySQL connection successful!')
     sys.exit(0)
 except Exception as e:
-    print(f'Database connection failed: {e}')
+    print(f'MySQL connection failed: {e}')
     sys.exit(1)
 "
     if [ $? -eq 0 ]; then
