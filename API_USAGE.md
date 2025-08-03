@@ -41,10 +41,6 @@ curl -X GET "https://behind-back-production.up.railway.app/partners/" \
       "gender": "male",
       "age": 25,
       "relation": "친구",
-      "intimacy": 0.8,
-      "affection": 0.7,
-      "aggression": 0.2,
-      "dominance": 0.5,
       "closeness": 8,
       "user_id": 1,
       "created_at": "2024-01-01T00:00:00Z",
@@ -66,10 +62,6 @@ curl -X POST "https://behind-back-production.up.railway.app/partners/" \
     "gender": "male",
     "age": 25,
     "relation": "친구",
-    "intimacy": 0.8,
-    "affection": 0.7,
-    "aggression": 0.2,
-    "dominance": 0.5,
     "closeness": 8
   }'
 ```

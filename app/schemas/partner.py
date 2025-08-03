@@ -9,10 +9,6 @@ class PartnerBase(BaseModel):
     gender: Optional[str] = None
     age: Optional[int] = None
     relation: Optional[str] = None
-    intimacy: Optional[float] = None
-    affection: Optional[float] = None
-    aggression: Optional[float] = None
-    dominance: Optional[float] = None
     closeness: Optional[int] = None
 
 

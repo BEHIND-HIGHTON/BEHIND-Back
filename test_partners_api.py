@@ -42,10 +42,6 @@ test_partner_data = {
     "gender": "male",
     "age": 25,
     "relation": "친구",
-    "intimacy": 0.8,
-    "affection": 0.7,
-    "aggression": 0.2,
-    "dominance": 0.5,
     "closeness": 8
 }
 
