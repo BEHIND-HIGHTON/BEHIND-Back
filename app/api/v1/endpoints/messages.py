@@ -12,15 +12,11 @@ router = APIRouter()
 def read_chat_history(
     user_id: int,
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     사용자의 채팅 기록을 조회합니다.
     """
-    # 현재 사용자만 자신의 채팅 기록을 조회할 수 있음
-    if current_user.id != user_id:
-        raise HTTPException(status_code=403, detail="Not enough permissions")
-    
+    # 권한 검사 제거 - 모든 사용자가 자유롭게 조회 가능
     chat_history = crud.message_crud.get_chat_history_by_user_id(db, user_id=user_id)
     
     # 채팅 기록이 없으면 빈 리스트 반환
@@ -47,15 +43,11 @@ def update_chat_history(
     *,
     db: Session = Depends(deps.get_db),
     chat_update: schemas.ChatUpdateRequest,
-    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     채팅 기록을 업데이트합니다.
     """
-    # 현재 사용자만 자신의 채팅 기록을 업데이트할 수 있음
-    if current_user.id != chat_update.user_id:
-        raise HTTPException(status_code=403, detail="Not enough permissions")
-    
+    # 권한 검사 제거 - 모든 사용자가 자유롭게 업데이트 가능
     try:
         updated_count = crud.message_crud.update_chat_history(
             db, 

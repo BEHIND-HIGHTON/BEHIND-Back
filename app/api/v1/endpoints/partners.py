@@ -12,18 +12,11 @@ router = APIRouter()
 def read_partners(
     user_id: int,
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     특정 사용자의 상대 목록을 조회합니다.
     """
-    # 권한 검사: 현재 사용자만 자신의 파트너 목록을 조회할 수 있음
-    if current_user.id != user_id:
-        raise HTTPException(
-            status_code=403, 
-            detail="자신의 파트너 목록만 조회할 수 있습니다."
-        )
-    
+    # 권한 검사 제거 - 모든 사용자가 자유롭게 조회 가능
     partners = crud.partner_crud.get_by_user_id(db, user_id=user_id)
     return {
         "partners": partners,
@@ -37,18 +30,11 @@ def create_partner(
     *,
     db: Session = Depends(deps.get_db),
     partner_in: schemas.PartnerCreate,
-    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     새로운 상대를 생성합니다.
     """
-    # 권한 검사: 현재 사용자만 자신의 파트너를 생성할 수 있음
-    if current_user.id != user_id:
-        raise HTTPException(
-            status_code=403, 
-            detail="자신의 파트너만 생성할 수 있습니다."
-        )
-    
+    # 권한 검사 제거 - 모든 사용자가 자유롭게 생성 가능
     partner = crud.partner_crud.create(db, obj_in=partner_in, user_id=user_id)
     return partner
 
@@ -60,18 +46,11 @@ def update_partner(
     *,
     db: Session = Depends(deps.get_db),
     partner_in: schemas.PartnerUpdate,
-    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     상대 정보를 업데이트합니다.
     """
-    # 권한 검사: 현재 사용자만 자신의 파트너를 수정할 수 있음
-    if current_user.id != user_id:
-        raise HTTPException(
-            status_code=403, 
-            detail="자신의 파트너만 수정할 수 있습니다."
-        )
-    
+    # 권한 검사 제거 - 모든 사용자가 자유롭게 수정 가능
     partner = crud.partner_crud.get(db, id=partner_id)
     if not partner or partner.user_id != user_id:
         raise HTTPException(status_code=404, detail="Partner not found")
@@ -85,18 +64,11 @@ def delete_partner(
     partner_id: int,
     *,
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_current_user),
 ) -> Any:
     """
     상대를 삭제합니다.
     """
-    # 권한 검사: 현재 사용자만 자신의 파트너를 삭제할 수 있음
-    if current_user.id != user_id:
-        raise HTTPException(
-            status_code=403, 
-            detail="자신의 파트너만 삭제할 수 있습니다."
-        )
-    
+    # 권한 검사 제거 - 모든 사용자가 자유롭게 삭제 가능
     partner = crud.partner_crud.get(db, id=partner_id)
     if not partner or partner.user_id != user_id:
         raise HTTPException(status_code=404, detail="Partner not found")

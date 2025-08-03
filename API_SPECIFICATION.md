@@ -3,6 +3,8 @@
 ## 개요
 BEHIND는 대화 상대와의 관계를 분석하고 메시지 의도를 파악하여 더 나은 소통을 돕는 AI 기반 메시지 분석 서비스입니다.
 
+**중요**: 파트너 관리 및 메시지 관련 API는 JWT 토큰 인증 없이 자유롭게 사용할 수 있습니다.
+
 ## Base URL
 ```
 https://behind-back-production.up.railway.app
@@ -68,6 +70,13 @@ POST /auth/login
 POST /auth/logout
 ```
 
+**Response:**
+```json
+{
+  "message": "로그아웃되었습니다."
+}
+```
+
 ---
 
 ## 2. 상대 관리 API
@@ -79,11 +88,6 @@ GET /partners/{user_id}
 
 **Path Variables:**
 - `user_id` (integer): 사용자 ID
-
-**Headers:**
-```
-Authorization: Bearer {access_token}
-```
 
 **Response:**
 ```json
@@ -113,11 +117,6 @@ POST /partners/{user_id}
 
 **Path Variables:**
 - `user_id` (integer): 사용자 ID
-
-**Headers:**
-```
-Authorization: Bearer {access_token}
-```
 
 **Request Body:**
 ```json
@@ -156,11 +155,6 @@ PUT /partners/{user_id}/{partner_id}
 - `user_id` (integer): 사용자 ID
 - `partner_id` (integer): 상대 ID
 
-**Headers:**
-```
-Authorization: Bearer {access_token}
-```
-
 **Request Body:**
 ```json
 {
@@ -198,11 +192,6 @@ DELETE /partners/{user_id}/{partner_id}
 - `user_id` (integer): 사용자 ID
 - `partner_id` (integer): 상대 ID
 
-**Headers:**
-```
-Authorization: Bearer {access_token}
-```
-
 **Response:**
 ```json
 {
@@ -210,9 +199,9 @@ Authorization: Bearer {access_token}
 }
 ```
 
-## 5. 채팅 기록
+## 3. 채팅 기록
 
-### 5.1 채팅 기록 조회
+### 3.1 채팅 기록 조회
 ```http
 GET /messages/{user_id}
 ```
@@ -249,7 +238,7 @@ GET /messages/{user_id}
 }
 ```
 
-### 5.2 채팅 기록 업데이트
+### 3.2 채팅 기록 업데이트
 ```http
 POST /messages/update
 ```
@@ -283,30 +272,16 @@ POST /messages/update
 }
 ```
 
-## 6. 에러 응답
+## 4. 에러 응답
 
-### 6.1 인증 오류
-```json
-{
-  "detail": "Not authenticated"
-}
-```
-
-### 6.2 권한 오류
-```json
-{
-  "detail": "Not enough permissions"
-}
-```
-
-### 6.3 리소스 없음
+### 4.1 리소스 없음
 ```json
 {
   "detail": "Partner not found"
 }
 ```
 
-### 6.4 유효성 검사 오류
+### 4.2 유효성 검사 오류
 ```json
 {
   "detail": [
@@ -319,41 +294,45 @@ POST /messages/update
 }
 ```
 
+## 5. 사용 예시
+
+### 5.1 상대 목록 조회
+```bash
+curl -X GET "https://behind-back-production.up.railway.app/partners/1"
 ```
--- 사용자 테이블
-CREATE TABLE IF NOT EXISTS user (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    hashed_password VARCHAR(255) NOT NULL,
-    full_name VARCHAR(255),
-    is_active BOOLEAN DEFAULT TRUE,
-    is_superuser BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
 
--- 파트너 테이블
-CREATE TABLE IF NOT EXISTS partner (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    mbti VARCHAR(4),
-    gender VARCHAR(10),
-    age INT,
-    relation VARCHAR(50),
-    closeness INT CHECK (closeness BETWEEN 0 AND 10),
-    user_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-);
+### 5.2 상대 생성
+```bash
+curl -X POST "https://behind-back-production.up.railway.app/partners/1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "김철수",
+    "mbti": "ENFP",
+    "gender": "남성",
+    "age": 25,
+    "relation": "친구",
+    "closeness": 8
+  }'
+```
 
-CREATE TABLE IF NOT EXISTS chat_history (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    chat_file JSON NOT NULL,
-    user_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-);
+### 5.3 채팅 기록 조회
+```bash
+curl -X GET "https://behind-back-production.up.railway.app/messages/1"
+```
+
+### 5.4 채팅 기록 업데이트
+```bash
+curl -X POST "https://behind-back-production.up.railway.app/messages/update" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": 1,
+    "partner_name": "김현호",
+    "messages": [
+      {
+        "content": "안녕하세요!",
+        "timestamp": "2025-01-15T10:00:00Z",
+        "type": "user"
+      }
+    ]
+  }'
 ```
